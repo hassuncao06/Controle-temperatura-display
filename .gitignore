@@ -1,32 +1,159 @@
-# Prerequisites
-*.d
+#include <LiquidCrystal.h>//biblioteca do display
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+#define pinoRS 6
+#define pinoEnable 7
+#define pinoD4 5
+#define pinoD5 4
+#define pinoD6 3
+#define pinoD7 2
+#define SLC 8
+#define LEFT 10
+#define RIGHT 9
+const int temp = A0;
+int ledverm = 13;
+int ledverd = 12;
+int ledazul = 11;
 
-# Precompiled Headers
-*.gch
-*.pch
+LiquidCrystal lcd(pinoRS, pinoEnable, pinoD4, pinoD5, pinoD6, pinoD7);
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+//função de escolha de tempo máximo
+byte tempMax(){
+  int tempmax = 25;//define temp. inicial máx
+  bool key = false;//funciona como uma trava de controle para os botôes
+  lcd.clear();//limpa o display
+  
+  while(digitalRead(SLC)){//enquanto SLC=alto, mantém no while
+  lcd.setCursor(1, 0);//define onde vai escrever no display
+  lcd.print("Valor Max: ");
+  lcd.print(tempmax);
+  if(key && !digitalRead(RIGHT)){//key=true e botão pressionado
+      lcd.clear();
+      tempmax++;
+    }
+  if(key && !digitalRead(LEFT)){
+      lcd.clear();
+      tempmax--;
+    }
+    key = true;
+    if(!digitalRead(LEFT) || !digitalRead(RIGHT)) key = false;
+      delay(90);
+  }
+  lcd.clear();
+  while(!digitalRead(SLC));
+    lcd.setCursor(0, 1);
+    lcd.print("Executando...");
+    delay(1000);
+  return tempmax;
+}
 
-# Fortran module files
-*.mod
-*.smod
+//função de escolha de tempo mínimo
+byte tempMin(){
+  int tempmin = 10;//define temp. inicial mín.
+  bool key = false;
+  lcd.clear();
+  
+  while(digitalRead(SLC)){
+  lcd.setCursor(1, 0);
+  lcd.print("Valor Min: ");
+  lcd.print(tempmin);
+  if(key && !digitalRead(RIGHT)){
+      lcd.clear();
+      tempmin++;
+    }
+  if(key && !digitalRead(LEFT)){
+      lcd.clear();
+      tempmin--;
+    }
+    key = true;
+    if(!digitalRead(LEFT) || !digitalRead(RIGHT)) key = false;
+      delay(90);
+  }
+  lcd.clear();
+  while(!digitalRead(SLC));
+    lcd.setCursor(0, 1);
+    lcd.print("Executando...");
+    delay(1000);
+  return tempmin;
+}
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
 
-# Executables
-*.exe
-*.out
-*.app
+
+void inicio(){
+  lcd.clear();
+  lcd.setCursor(16,0);
+  lcd.print("Controle temp");
+  Serial.begin(9600);
+  for(int i=0; i<15; i++){
+    lcd.scrollDisplayLeft();//Faz efeito deslizante nas palavras
+    delay(80);
+  }
+  delay(1000);
+  for(int i=0; i<15; i++){
+    lcd.scrollDisplayLeft();
+    delay(80);
+  }
+}
+
+void setup(){
+  lcd.begin(16, 2);
+  pinMode(SLC, INPUT_PULLUP);
+  pinMode(RIGHT, INPUT_PULLUP);
+  pinMode(LEFT, INPUT_PULLUP);
+  pinMode(ledverm, OUTPUT);
+  pinMode(ledverd, OUTPUT);
+  pinMode(ledazul, OUTPUT);
+  inicio();
+  
+}
+
+void loop(){
+  bool key = false;
+  int tempmax = tempMax();
+  delay(10);
+  int tempmin = tempMin();
+  delay(10);
+  
+  while(digitalRead(SLC)){
+  float Temp = (analogRead(temp)*0.0048828125*100);
+  delay(10);
+  
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("TMax=");
+  lcd.print(tempmax);
+  lcd.print("C");
+  lcd.setCursor(0, 1);
+  lcd.print("TMin=");
+  lcd.print(tempmin);
+  lcd.print("C");
+  lcd.setCursor(8, 0);
+  lcd.print("TMed=");
+  lcd.print(Temp);
+  lcd.print("C");
+  
+  if(Temp<tempmin){
+    digitalWrite(ledverm, HIGH);
+    digitalWrite(ledazul, LOW);
+    digitalWrite(ledverd, LOW);
+  }else if(Temp>tempmin && Temp<tempmax){
+    digitalWrite(ledverd, HIGH);
+    digitalWrite(ledverm, LOW);
+    digitalWrite(ledazul, LOW);
+  }else if(Temp>tempmax){
+    digitalWrite(ledazul, HIGH);
+    digitalWrite(ledverd, LOW);
+    digitalWrite(ledverm, LOW);
+  }
+  delay(10);
+  
+  
+    key = true;
+    if(!digitalRead(LEFT) || !digitalRead(RIGHT)) key = false;
+      delay(90);
+  }
+  lcd.clear();
+  while(!digitalRead(SLC));
+    lcd.setCursor(0, 1);
+    lcd.print("Executando...");
+    delay(1000);
+}
