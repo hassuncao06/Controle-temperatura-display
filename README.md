@@ -3,12 +3,10 @@ Controle de temperatura com hud interativo onde é possível variar temperatura 
 O Software utilizado foi o Tinkercad, na simulação foram utilizados 3 leds, 3 botões push buttons, um display, um potenciômetro, 4 resistores, sendo 1 para o display e 3 para os leds, e também foi utilizado o sensor de temperatura TMP36 que é o unico disponível no tinkercad.
 Observe que os 3 push buttons não possuem resistores, isso ocorre pois estão configurados como INPUT_PULLUP, onde é utilizado um resistor interno do arduino.
 
-# Working Conditions:
+# Working Conditions
 
-Se Temp>Temp_Máx ➞ ledAzul = 1, ledVerd = 0, ledVerm = 0;
-
-Se Temp_Mín<Temp<Temp_Máx ➞ ledAzul = 0, ledVerd = 1, ledVerm = 0;
-
-Se Temp<Temp_Mín ➞ ledAzul = 0, ledVerd = 0, ledVerm = 1;
+Se Temp>Temp_Máx ➞ ledAzul = 1, ledVerd = 0, ledVerm = 0.
+Se Temp_Mín<Temp<Temp_Máx ➞ ledAzul = 0, ledVerd = 1, ledVerm = 0.
+Se Temp<Temp_Mín ➞ ledAzul = 0, ledVerd = 0, ledVerm = 1.
 
 ![image](https://github.com/hassuncao06/Controle-temperatura-display/assets/93269234/82598bbe-e00d-46b7-bd8f-fd575faa15a9)
