@@ -6,7 +6,9 @@ Observe que os 3 push buttons não possuem resistores, isso ocorre pois estão c
 # Working Conditions
 
 Se Temp>Temp_Máx ➞ ledAzul = 1, ledVerd = 0, ledVerm = 0.
+
 Se Temp_Mín<Temp<Temp_Máx ➞ ledAzul = 0, ledVerd = 1, ledVerm = 0.
+
 Se Temp<Temp_Mín ➞ ledAzul = 0, ledVerd = 0, ledVerm = 1.
 
 ![image](https://github.com/hassuncao06/Controle-temperatura-display/assets/93269234/82598bbe-e00d-46b7-bd8f-fd575faa15a9)
